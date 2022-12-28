@@ -1,15 +1,4 @@
 import ast
-from collections.abc import Iterable
-import re
-from typing import Union
-
-
-def clean_whitespaces(input: str) -> str:
-    return re.sub('\s+', '', input)
-
-
-def clean_linebreaks(input):
-    return re.sub('[\n]{2,}', '\n', input)
 
 
 def levenshtein(a: str, b: str) -> int:
@@ -62,14 +51,10 @@ def parse(x):
 def compare(x, y):
     imports_x, other_x = parse(x)
     imports_y, other_y = parse(y)
-    return 1 - dict_size(dict_intersection(imports_x, imports_y)) / (
-            max(dict_size(imports_x), dict_size(imports_y)) + 0.01) - levenshtein(other_x, other_y) / min(len(other_x),
-                                                                                                          len(other_y))
-
-
-def single(array: list):
-    assert len(array) == 1, 'array contains more the one element'
-    return array[0]
+    return 1 - \
+        dict_size(dict_intersection(imports_x, imports_y)) / (max(dict_size(imports_x), dict_size(imports_y)) + 0.01) \
+        - \
+        levenshtein(other_x, other_y) / max(len(other_x), len(other_y))
 
 
 def list_intersection(x: list, y: list) -> list:
