@@ -1,3 +1,3 @@
 corpus/files/main.py corpus/plagiat1/main.py
-corpus/files/loss.py corpus/plagiat2/loss.py
-corpus/files/loss.py corpus/files/loss.py
+corpus/files/lossy.py corpus/plagiat2/lossy.py
+corpus/files/main.py corpus/files/main.py

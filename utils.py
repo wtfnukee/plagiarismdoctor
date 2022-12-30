@@ -24,19 +24,21 @@ def levenshtein(a: str, b: str) -> int:
     return current_row[n]
 
 
-def parse_import(i: ast.Import, imports: dict):
+def parse_import(i: ast.Import, imports: dict) -> dict:
     i = i.__dict__
     names = i["names"]
     modules = [j.__dict__["name"] for j in names]
     for module in modules:
         imports[module] = [module]
+    return imports
 
 
-def parse_importfrom(i: ast.ImportFrom, imports: dict):
+def parse_importfrom(i: ast.ImportFrom, imports: dict) -> dict:
     i = i.__dict__
     module = i["module"]
     submodules = [j.__dict__["name"] for j in i["names"]]
     imports[module] = imports.get(module, []) + submodules
+    return imports
 
 
 def parse(x):
@@ -44,22 +46,24 @@ def parse(x):
     other = ""
     for i in ast.parse(x).body:
         if isinstance(i, ast.Import):
-            parse_import(i, imports)
+            imports.update(parse_import(i, imports))
         elif isinstance(i, ast.ImportFrom):
-            parse_importfrom(i, imports)
+            imports.update(parse_import(i, imports))
         else:
             other += ast.unparse(i) + " "
-    return imports, other
+    return imports, other.lower()
 
 
-def compare(x, y):
+def clip(x):
+    return 0 if x == 1 else x
+
+
+def compare(x: str, y: str) -> float:
     imports_x, other_x = parse(x)
     imports_y, other_y = parse(y)
     return (
-        1
-        - dict_size(dict_intersection(imports_x, imports_y))
-        / (max(dict_size(imports_x), dict_size(imports_y)) + 0.01)
-        - levenshtein(other_x, other_y) / max(len(other_x), len(other_y))
+            + dict_size(dict_intersection(imports_x, imports_y)) / max(dict_size(imports_x), dict_size(imports_y))
+            - levenshtein(other_x, other_y) / max(len(other_x), len(other_y))
     )
 
 

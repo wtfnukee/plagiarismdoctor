@@ -14,5 +14,9 @@ with open(input_path, encoding="UTF-8") as inp, open(
 ) as out:
     for i in inp.readlines():
         x, y = i.split()
+        with open(x) as X, open(y) as Y:
+            x = X.read()
+            y = Y.read()
         score = compare(x, y)
+        # score = levenshtein(x, y)
         out.write(f"{score}\n")
