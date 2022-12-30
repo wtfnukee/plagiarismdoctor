@@ -41,28 +41,36 @@ def parse_importfrom(i: ast.ImportFrom, imports: dict) -> dict:
     return imports
 
 
+def parse_function(i: ast.FunctionDef, functions: str) -> str:
+    d = i.__dict__
+    # print(ast.unparse(i))
+    return ast.unparse(i)
+
+
 def parse(x):
     imports = dict()
+    functions = ""
     other = ""
     for i in ast.parse(x).body:
         if isinstance(i, ast.Import):
             imports.update(parse_import(i, imports))
         elif isinstance(i, ast.ImportFrom):
-            imports.update(parse_import(i, imports))
+            imports.update(parse_importfrom(i, imports))
+        elif isinstance(i, ast.FunctionDef):
+            functions += parse_function(i, functions) + "\n"
         else:
             other += ast.unparse(i) + " "
-    return imports, other.lower()
-
-
-def clip(x):
-    return 0 if x == 1 else x
+    return imports, functions, other.lower()
 
 
 def compare(x: str, y: str) -> float:
-    imports_x, other_x = parse(x)
-    imports_y, other_y = parse(y)
+    imports_x, functions_x, other_x = parse(x)
+    imports_y, functions_y, other_y = parse(y)
     return (
-            + dict_size(dict_intersection(imports_x, imports_y)) / max(dict_size(imports_x), dict_size(imports_y))
+            0
+            + dict_size(dict_intersection(imports_x, imports_y))
+            / max(dict_size(imports_x), dict_size(imports_y))
+            - levenshtein(functions_x, functions_y) / (max(len(functions_x), len(functions_y)) + 0.01)
             - levenshtein(other_x, other_y) / max(len(other_x), len(other_y))
     )
 

@@ -18,5 +18,4 @@ with open(input_path, encoding="UTF-8") as inp, open(
             x = X.read()
             y = Y.read()
         score = compare(x, y)
-        # score = levenshtein(x, y)
         out.write(f"{score}\n")
