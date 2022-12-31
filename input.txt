@@ -1,3 +1,5 @@
+test.py test1.py
 corpus/files/main.py corpus/plagiat1/main.py
-corpus/files/lossy.py corpus/plagiat2/lossy.py
+corpus/files/main.py corpus/plagiat2/main.py
+corpus/files/arima.py corpus/plagiat1/arima.py
 corpus/files/main.py corpus/files/main.py
