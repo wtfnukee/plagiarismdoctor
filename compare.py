@@ -7,12 +7,22 @@ import numpy as np
 from numpy.linalg import norm
 
 
+def clean(s: str) -> str:
+    s = re.sub(r"#.", "", s)
+    s = re.sub(r'".*?"', "", s)
+    s = re.sub(r"'.*?'", "", s)
+    s = re.sub(r"'''.*?'''", "", s)
+    s = re.sub(r'""".*?"""', "", s)
+    return s
+
+
 class TfidfVectorizer:
-    def __init__(self):
-        self._df = None
-        self._tf = None
+    def __init__(self, preprocessor=None):
+        self.preprocessor = preprocessor
         self.corpus = None
         self.norm_corpus = None
+        self._df = None
+        self._tf = None
         self._tfidf = None
         self._idf = None
 
@@ -26,6 +36,8 @@ class TfidfVectorizer:
         return self._tfidf
 
     def __normalize_corpus(self, d: str) -> str:
+        if self.preprocessor is not None:
+            d = self.preprocessor(d)
         d = re.sub(r"[^a-zA-Z0-9\s]", "", d, re.I | re.A)
         d = d.lower().strip()
         tks = d.split()
@@ -72,7 +84,7 @@ parser.add_argument("input")
 parser.add_argument("output")
 args = parser.parse_args()
 input_path, output_path = args.input, args.output
-vectorizer = TfidfVectorizer()
+vectorizer = TfidfVectorizer(preprocessor=clean)
 
 with open(input_path, encoding="UTF-8") as inp, open(
     output_path, encoding="UTF-8", mode="w"
