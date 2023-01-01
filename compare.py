@@ -1,7 +1,7 @@
 import argparse
 import re
 from collections import Counter
-from typing import List
+from typing import List, Callable
 
 import numpy as np
 from numpy.linalg import norm
@@ -17,7 +17,7 @@ def clean(s: str) -> str:
 
 
 class TfidfVectorizer:
-    def __init__(self, preprocessor=None):
+    def __init__(self, preprocessor: Callable[[str], str] = None):
         self.preprocessor = preprocessor
         self.corpus = None
         self.norm_corpus = None
@@ -89,8 +89,8 @@ vectorizer = TfidfVectorizer(preprocessor=clean)
 with open(input_path, encoding="UTF-8") as inp, open(
     output_path, encoding="UTF-8", mode="w"
 ) as out:
-    for i in inp.readlines():
-        first_file, second_file = i.split()
+    for line in inp.readlines():
+        first_file, second_file = line.split()
         try:
             with open(first_file, encoding="UTF-8") as x, open(
                 second_file, encoding="UTF-8"
@@ -100,7 +100,6 @@ with open(input_path, encoding="UTF-8") as inp, open(
                 tfidf = vectorizer.fit_transform([x, y])
                 pairwise_similarity = tfidf @ tfidf.T
                 score = round(pairwise_similarity[0][1], 2)
-
                 out.write(f"{score}\n")
         except FileNotFoundError:
             out.write(
