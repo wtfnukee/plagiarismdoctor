@@ -5,6 +5,7 @@ from transformers import pipeline
 # Yes, you can build your own neural network, handwritten TF IDF or whatever, but why?
 # Just search through hugging face and get what you want
 pipe = pipeline(model="Lazyhope/python-clone-detection", trust_remote_code=True)
+# https://huggingface.co/Lazyhope/python-clone-detection
 
 parser = argparse.ArgumentParser(
     prog="Plagiarism Doctor", description="Yes, it is like Plague Doctor"
@@ -15,13 +16,13 @@ args = parser.parse_args()
 input_path, output_path = args.input, args.output
 
 with open(input_path, encoding="UTF-8") as inp, open(
-        output_path, encoding="UTF-8", mode="w"
+    output_path, encoding="UTF-8", mode="w"
 ) as out:
     for line in inp.readlines():
         first_file, second_file = line.split()
         try:
             with open(first_file, encoding="UTF-8") as x, open(
-                    second_file, encoding="UTF-8"
+                second_file, encoding="UTF-8"
             ) as y:
                 x = x.read()
                 y = y.read()
