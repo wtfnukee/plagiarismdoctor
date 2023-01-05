@@ -30,9 +30,7 @@ with open(input_path, encoding="UTF-8") as inp, open(
                 score = round(is_clone[True], 2)
                 out.write(f"{score}\n")
         except FileNotFoundError:
-            out.write(
-                f"It appears the files {first_file} or {second_file} are missing.\n"
-            )
+            out.write(f"It appears files {first_file} or {second_file} are missing.\n")
         except BaseException as e:
             out.write(
                 f"There's been a problem (namely {e}) with analyzing {first_file} and {second_file} files.\n"

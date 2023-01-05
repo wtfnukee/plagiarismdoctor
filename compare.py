@@ -9,10 +9,10 @@ from numpy.linalg import norm
 
 def clean(s: str) -> str:
     s = re.sub(r"#.", "", s)
-    s = re.sub(r'".*?"', "", s)
-    s = re.sub(r"'.*?'", "", s)
     s = re.sub(r"'''.*?'''", "", s)
     s = re.sub(r'""".*?"""', "", s)
+    s = re.sub(r'".*?"', "", s)
+    s = re.sub(r"'.*?'", "", s)
     return s
 
 
@@ -46,6 +46,7 @@ class TfidfVectorizer:
     def preprocessing_text(self):
         n_c = np.vectorize(self.__normalize_corpus)
         self.norm_corpus = n_c(self.corpus)
+        print(self.norm_corpus[0])
 
     def tf(self):
         words_array = [doc.split() for doc in self.norm_corpus]
@@ -85,7 +86,6 @@ parser.add_argument("output")
 args = parser.parse_args()
 input_path, output_path = args.input, args.output
 vectorizer = TfidfVectorizer(preprocessor=clean)
-
 with open(input_path, encoding="UTF-8") as inp, open(
     output_path, encoding="UTF-8", mode="w"
 ) as out:
@@ -102,9 +102,7 @@ with open(input_path, encoding="UTF-8") as inp, open(
                 score = round(pairwise_similarity[0][1], 2)
                 out.write(f"{score}\n")
         except FileNotFoundError:
-            out.write(
-                f"It appears the files {first_file} or {second_file} are missing.\n"
-            )
+            out.write(f"It appears files {first_file} or {second_file} are missing.\n")
         except BaseException as e:
             out.write(
                 f"There's been a problem (namely {e}) with analyzing {first_file} and {second_file} files.\n"
