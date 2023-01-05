@@ -6,6 +6,10 @@
 
 -----
 
+### There is 2.5 solutions: one with Levenshtein distance at [b8f30c3](https://github.com/wtfnukee/plagiarismdoctor/tree/b8f30c3d7b9957783e723502c7b1db7ac6a720d2), one with handwritten TF-IDF and 0.5 with Transformers and pretrained model.
+ 
+-----
+
 Run this to compare files and write similarity score to file
 ```
 python3 compare.py input.txt scores.txt
