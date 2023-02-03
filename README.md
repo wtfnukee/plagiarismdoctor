@@ -28,3 +28,5 @@ Example of scores.txt
 0.75
 1.0
 ```
+
+UPD: this solution got approved by Tinkoff Generation.
